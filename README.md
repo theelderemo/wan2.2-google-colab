@@ -1,172 +1,186 @@
-# Wan 2.2 Google Colab Template
+# Wan2.2 Google Colab — Complete Video Generation Suite
 
-A ready to use Google Colab notebook template for running [Wan 2.2](https://github.com/Wan-Video/Wan2.2), an advanced image to video AI model. This template simplifies the setup process and provides an optimized workflow for generating videos from images on Colab's free GPU resources.
-
+A comprehensive Google Colab notebook covering **every generation mode** in [Wan2.2](https://github.com/Wan-Video/Wan2.2) — the open-source MoE video generation model from Alibaba. Includes text-to-video, image-to-video, speech-to-video, pose-driven animation, character replacement, and more.
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/theelderemo/wan2.2-google-colab/blob/main/wan2_2.ipynb)
 
-## Features
+---
 
-- **One Click Setup**: Automated installation of all dependencies and model downloads
-- **Optimized for Colab**: Pre-configured settings for Google Colab (also works on other notebook platforms)
-- **Memory Efficient**: Includes flags for model offloading and CPU-based text encoding to manage VRAM
-- **User Friendly Interface**: Simple upload → configure → generate workflow
-- **Multiple Resolutions**: Support for 1280×720, 832×480, and 1024×1024 outputs
+## Supported Generation Modes
+
+| Section | Mode | Model | Resolution | Notes |
+|---------|------|-------|------------|-------|
+| 2 | **Text-to-Video** | T2V-A14B | 480P / 720P | MoE 27B total / 14B active |
+| 3 | **Image-to-Video** | I2V-A14B | 480P / 720P | Aspect ratio follows input image |
+| 4 | **Text+Image-to-Video** | TI2V-5B | 720P @ 24fps | Runs on RTX 4090 (24 GB) |
+| 5a | **Speech-to-Video** | S2V-14B | 480P / 720P | Image + audio file → talking video |
+| 5b | **Pose-Driven Speech-to-Video** | S2V-14B | 480P / 720P | Image + audio + pose MP4 |
+| 5c | **TTS Speech-to-Video** | S2V-14B + CosyVoice | 480P / 720P | Synthesize voice, then animate |
+| 6a | **Character Animation** | Animate-14B | 720P | Character mimics motion from video |
+| 6b | **Character Replacement** | Animate-14B | 720P | Swap character into existing video |
+
+---
 
 ## Quick Start
 
-### Option 1: Using the Notebook (Recommended)
+### 1. Open in Google Colab
 
-1. **Open in Google Colab**:
-   - Upload `wan2_2.ipynb` to Google Colab, or
-   - Use the "Open in Colab" button if you've set one up
+Click the badge above or upload `wan2_2.ipynb` directly to [colab.research.google.com](https://colab.research.google.com).
 
-2. **Select GPU Runtime**:
-   - Go to `Runtime` → `Change runtime type`
-   - Select `GPU` (preferably A100 if available)
-   - Click `Save`
+### 2. Select a GPU Runtime
 
-3. **Run the Cells**:
-   - Execute each cell in order (or use `Runtime` → `Run all`)
-   - The notebook will:
-     - Clone the Wan 2.2 repository
-     - Install all required dependencies
-     - Download the model (≈60GB, takes 5ish minutes)
-     - Set up the generation pipeline
+Go to `Runtime` → `Change runtime type` → select **A100** (recommended for A14B models) or **T4/L4** (for TI2V-5B).
 
-4. **Generate Your Video**:
-   - Upload an input image when prompted
-   - Configure your prompt and settings
-   - Run the generation cell and wait for your video!
+### 3. Run Section 0 — Setup
 
-### Option 2: Using the Python Script
+Run the setup cells once per session. They:
+- Check your GPU
+- Clone the Wan2.2 repo (skips if already present)
+- Install all Python dependencies
+- Optionally install flash-attn and CosyVoice (S2V TTS) extras
 
-If you prefer working with Python scripts directly:
+### 4. Run Section 1 — Download Your Model(s)
 
-```python
-# The wan2_2.py file contains the same workflow
-# You can run it in any Python notebook environment
-```
+Each model has its own download cell. Only download what you need:
 
-## Requirements
+| Cell | Model | Approx Size |
+|------|-------|-------------|
+| 1.1 | Wan2.2-T2V-A14B | ~28 GB |
+| 1.2 | Wan2.2-I2V-A14B | ~28 GB |
+| 1.3 | Wan2.2-TI2V-5B | ~10 GB |
+| 1.4 | Wan2.2-S2V-14B | ~28 GB |
+| 1.5 | Wan2.2-Animate-14B | ~28 GB |
 
-### Recommended Hardware (Google Colab)
-- **GPU**: NVIDIA A100 (40GB) or T4 (16GB)
-- **RAM**: 12GB+ system RAM
-- **Storage**: 70GB+ free space for model and temporary files
+### 5. Jump to Any Generation Section
 
-### Software Dependencies
-All dependencies are automatically installed by the notebook:
-- Python 3.8+
-- PyTorch 2.4.0+
-- Transformers, Diffusers, Accelerate
-- Flash Attention
-- Various CV and ML libraries
+Each section is self-contained. Configure settings via the `@param` widgets, upload your inputs, and run the generation cell.
 
-## Usage Guide
+---
 
-### Step 1: Upload Your Image
-The notebook will prompt you to upload an input image. Supported formats:
-- JPEG/JPG
-- PNG
-- BMP
-
-### Step 2: Configure Settings
-
-#### Prompting
-Write a detailed text description of the motion/action you want to see in your video:
+## Notebook Structure
 
 ```
-Example: "A woman smiling and waving at the camera, 
-her hair gently moving in the breeze"
+wan2_2.ipynb
+├── Section 0 — Setup & Installation
+│   ├── 0.1  GPU check
+│   ├── 0.2  Clone Wan2.2 repo
+│   ├── 0.3  Install core dependencies
+│   ├── 0.4  Install flash-attn (optional)
+│   ├── 0.5  Install S2V / CosyVoice deps (optional)
+│   └── 0.6  Install huggingface-hub CLI
+│
+├── Section 1 — Model Download
+│   ├── 1.1  T2V-A14B
+│   ├── 1.2  I2V-A14B
+│   ├── 1.3  TI2V-5B
+│   ├── 1.4  S2V-14B
+│   └── 1.5  Animate-14B
+│
+├── Section 2 — Text-to-Video (T2V-A14B)
+│   ├── 2.1  Configuration (resolution, steps, seed, prompt extension)
+│   └── 2.2  Run generation
+│
+├── Section 3 — Image-to-Video (I2V-A14B)
+│   ├── 3.1  Upload image
+│   ├── 3.2  Configuration
+│   └── 3.3  Run generation
+│
+├── Section 4 — Text+Image-to-Video (TI2V-5B)
+│   ├── 4.1  Upload image (optional — omit for pure T2V)
+│   ├── 4.2  Configuration
+│   └── 4.3  Run generation
+│
+├── Section 5 — Speech-to-Video (S2V-14B)
+│   ├── 5.1  Upload image & audio
+│   ├── 5.2a Basic S2V config + run
+│   ├── 5.3b Pose-driven S2V (upload pose video) + run
+│   └── 5.4c TTS S2V — CosyVoice voice cloning + run
+│
+├── Section 6 — Character Animation & Replacement (Animate-14B)
+│   ├── 6.1  Upload character image & motion video
+│   ├── 6.2  Choose mode (animate / replace) & resolution
+│   ├── 6.3  Preprocess input video (extracts pose/face signals)
+│   ├── 6.4a Run — Animation mode
+│   └── 6.4b Run — Replacement mode
+│
+└── Section 7 — Display & Download
+    ├── 7.1  List all generated videos
+    ├── 7.2  Preview video inline
+    └── 7.3  Download to local machine
 ```
 
-#### Model Configuration
-- **Task**: Choose between `i2v-A14B` (14B parameters, higher quality) or `i2v-1.3B` (faster)
-- **Resolution**: Select from `1280*720`, `832*480`, or `1024*1024`
-- **Checkpoint Directory**: Default is `./Wan2.2-I2V-A14B`
+---
 
-#### Optimization Flags
-Enable these to manage memory usage:
-- **Offload Model**: Offloads parts of the model to CPU to save VRAM
-- **Use T5 CPU**: Runs text encoder on CPU (recommended for free tier)
-- **Convert Model Dtype**: Converts model to lower precision for memory efficiency
+## GPU Requirements
 
-### Step 3: Generate Video
-Run the generation cell and wait. Processing typically takes:
-- **A100 GPU**: 5-10 minutes per video
-- **T4 GPU**: 15-25 minutes per video
+| Model | Minimum VRAM | Recommended |
+|-------|-------------|-------------|
+| TI2V-5B | 24 GB | RTX 4090 / L4 |
+| T2V-A14B | 24 GB (with offload flags) | A100 80 GB |
+| I2V-A14B | 24 GB (with offload flags) | A100 80 GB |
+| S2V-14B | 80 GB | A100 80 GB |
+| Animate-14B | 80 GB | A100 80 GB |
 
-### Step 4: View Your Video
-The notebook automatically displays the generated video inline when complete.
+> All A14B sections include `--offload_model`, `--convert_model_dtype`, and `--t5_cpu` toggle flags to reduce VRAM usage on smaller GPUs.
+
+---
+
+## Prompt Extension
+
+For richer, more detailed outputs, the T2V and I2V sections support **prompt extension** via:
+
+- **Local Qwen** — runs a Qwen2.5 LLM (T2V) or Qwen2.5-VL (I2V) locally to expand your prompt. No API key needed.
+- **Dashscope API** — uses Alibaba Cloud's hosted `qwen-plus` / `qwen-vl-max` models. Requires a free [Dashscope API key](https://www.alibabacloud.com/help/en/model-studio/getting-started/first-api-call-to-qwen).
+
+---
+
+## Troubleshooting
+
+### Out of Memory (OOM)
+- Enable all three memory flags: `offload_model`, `convert_model_dtype`, `t5_cpu`
+- Drop resolution to 832×480
+- Use TI2V-5B (Section 4) instead of the A14B models — it runs on 24 GB
+
+### Model Download Fails
+- Re-run the download cell — `huggingface-cli` resumes partial downloads
+- Log in to Hugging Face to avoid rate limits: uncomment the `login()` line in cell 0.6
+
+### flash-attn Build Fails
+- Skip cell 0.4 — the model falls back to standard attention automatically
+- Or try: `pip install flash-attn --no-build-isolation` after installing all other deps first
+
+### S2V / CosyVoice Import Errors
+- Make sure you ran cell 0.5 before Section 5c
+- CosyVoice requires the `requirements_s2v.txt` extras
+
+### Animate Preprocessing Fails
+- Ensure `Wan2.2-Animate-14B/process_checkpoint` exists (downloaded in cell 1.5)
+- Input video should be a standard MP4 with a clearly visible human subject
+
+---
 
 ## Repository Structure
 
 ```
 wan2.2-google-colab/
-├── wan2_2.ipynb          # Main Colab notebook
-├── wan2_2.py             # Python script version
-└── README.md             # This file
+├── wan2_2.ipynb    # Main notebook (all generation modes)
+├── README.md       # This file
+└── SECURITY.md
 ```
-
-## Customization
-
-### Changing the Model
-To use a different Wan 2.2 checkpoint:
-
-1. Update the `checkpoint_dir` variable in Step 2
-2. Use the appropriate task identifier (`i2v-A14B` or `i2v-1.3B`)
-
-### Advanced Parameters
-You can modify the generation command in Step 3 to add more flags. Refer to the [official Wan 2.2 repository](https://github.com/Wan-Video/Wan2.2) for all available options.
-
-## Troubleshooting
-
-### Out of Memory Errors
-If you encounter CUDA out of memory errors:
-1. Enable all optimization flags (offload, T5 CPU, convert dtype)
-2. Try a lower resolution (832×480 instead of 1280×720)
-3. Use the smaller 1.3B model instead of 14B
-4. Restart runtime and clear cache before running
-
-### Model Download Fails
-- Check your internet connection
-- The model is ≈60GB, ensure enough storage
-- Try rerunning the download cell
-
-### Video Quality Issues
-- Use more detailed prompts
-- Ensure input image is high quality
-- Try the larger A14B model if using 1.3B
-- Experiment with different resolutions
-
-## Credits
-
-- **Wan 2.2 Model**: [Wan-Video/Wan2.2](https://github.com/Wan-Video/Wan2.2)
-
-## License
-
-This template follows the same license as the Wan 2.2 project. Please refer to the [original repository](https://github.com/Wan-Video/Wan2.2) for licensing information.
-
-## Contributing
-
-Contributions are welcome! If you have improvements or fixes:
-1. Fork this repository
-2. Make your changes
-3. Submit a pull request
-
-## Additional Resources
-
-- [Wan 2.2 Official Repository](https://github.com/Wan-Video/Wan2.2)
-- [Hugging Face Model](https://huggingface.co/Wan-AI/Wan2.2-I2V-A14B)
-- [Google Colab Documentation](https://colab.research.google.com/)
-
-## Support
-
-For issues specific to this template, please open an issue in this repository.
-
-For questions about the Wan 2.2 model itself, refer to the [official repository](https://github.com/Wan-Video/Wan2.2).
 
 ---
 
-**Note**: This is an unofficial template designed to make Wan 2.2 more accessible on Google Colab and other notebook platforms. Always ensure you have appropriate compute resources and comply with the platform's usage policies.
+## Credits & Links
+
+- **Wan2.2 Model**: [Wan-Video/Wan2.2](https://github.com/Wan-Video/Wan2.2)
+- **Hugging Face**: [Wan-AI](https://huggingface.co/Wan-AI/)
+- **Paper**: [arXiv:2503.20314](https://arxiv.org/abs/2503.20314)
+- **CosyVoice (TTS)**: [FunAudioLLM/CosyVoice](https://github.com/FunAudioLLM/CosyVoice)
+
+## License
+
+This template is released under the same [Apache 2.0 License](https://github.com/Wan-Video/Wan2.2/blob/main/LICENSE.txt) as the upstream Wan2.2 project.
+
+---
+
+> This is an unofficial Colab template. For questions about the Wan2.2 model itself, refer to the [official repository](https://github.com/Wan-Video/Wan2.2) or join their [Discord](https://discord.gg/AKNgpMK4Yj).
