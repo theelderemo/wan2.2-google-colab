@@ -2,6 +2,8 @@
 
 A ready to use Google Colab notebook template for running [Wan 2.2](https://github.com/Wan-Video/Wan2.2), an advanced image to video AI model. This template simplifies the setup process and provides an optimized workflow for generating videos from images on Colab's free GPU resources.
 
+<img src="https://camo.githubusercontent.com/eff96fda6b2e0fff8cdf2978f89d61aa434bb98c00453ae23dd0aab8d1451633/68747470733a2f2f636f6c61622e72657365617263682e676f6f676c652e636f6d2f6173736574732f636f6c61622d62616467652e737667" alt="Open In Colab" data-canonical-src="https://colab.research.google.com/assets/colab-badge.svg">
+
 ## Features
 
 - **One Click Setup**: Automated installation of all dependencies and model downloads
